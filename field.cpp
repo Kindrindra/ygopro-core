@@ -2871,6 +2871,27 @@ int32 field::is_player_can_discard_hand(uint8 playerid, card * pcard, effect * p
 	}
 	return TRUE;
 }
+int32 field::check_discard_hand_cost(uint8 playerid, uint32 discardcount, uint32 discardreason){
+	effect_set eset;
+	int32 val = discardcount;
+	filter_player_effect(playerid, EFFECT_DISCARD_COST_CHANGE, &eset);
+	for(int32 i=0; i< eset.size(); ++i){
+		pduel->lua->add_param(core.reason_effect, PARAM_TYPE_EFFECT);
+		pduel->lua->add_param(playerid, PARAM_TYPE_INT);
+		val = eset[i]->get_value(2);
+	}
+	if(val <= 0)
+		return TRUE;
+	tevent e;
+	e.event_cards = 0;
+	e.event_player = playerid;
+	e.event_value = discardcount;
+	e.reason = discardreason;
+	e.reason_player = playerid;
+	if(effect_replace_check(EFFECT_DISCARD_COST_CHANGE, e))
+		return TRUE;
+	return FALSE;
+}
 int32 field::is_player_can_summon(uint8 playerid) {
 	effect_set eset;
 	filter_player_effect(playerid, EFFECT_CANNOT_SUMMON, &eset);
