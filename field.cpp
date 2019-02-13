@@ -2878,7 +2878,8 @@ int32 field::check_discard_hand_cost(uint8 playerid, uint32 discardcount, uint32
 	for(int32 i=0; i< eset.size(); ++i){
 		pduel->lua->add_param(core.reason_effect, PARAM_TYPE_EFFECT);
 		pduel->lua->add_param(playerid, PARAM_TYPE_INT);
-		val = eset[i]->get_value(2);
+		pduel->lua->add_param(val, PARAM_TYPE_INT);
+		val = eset[i]->get_value(3);
 	}
 	if(val <= 0)
 		return TRUE;
